@@ -58,4 +58,5 @@ console.log(categorizedMessages);
 First, we import the necessary functions and class from the `message-filter` package. Then, we create a new `MessageFilter` instance and add a filter and a category function using the `addFilter` and `addCategory` methods. Finally, we use the `filter` and `categorize` methods to filter and categorize the messages.
 
 ## Final Notes
+
 Message Filter is a powerful tool for filtering and categorizing incoming messages in a way that enables bots and other software applications to more effectively manage and respond to user messages. By using the functions and methods provided by this package, you can quickly and easily filter messages based on content, sentiment, or other criteria, and categorize them for further processing. Whether you're building a chatbot, an email filtering system, or any other application that involves processing user messages, Message Filter can help you save time and increase efficiency.
