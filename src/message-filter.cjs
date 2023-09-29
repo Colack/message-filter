@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // src/message-filter.cjs
-// Author: Jack Spencer :D
+// Author: Jack Spencer
 
 // Import Libraries
 const natural = require('natural');
@@ -252,6 +252,39 @@ function categorizeMessagesByInappropriateWords(messages) {
   });
 }
 
+function filterMessagesBySentiment(messages, minSentiment, maxSentiment) {
+  // Filter an array of messages to only include messages with a sentiment score within the specified range
+  return filterMessages(messages, message => {
+    const sentimentScore = getSentiment(message);
+    return sentimentScore >= minSentiment && sentimentScore <= maxSentiment;
+  });
+}
+
+function filterMessagesByInappropriateWords(messages) {
+  // Filter an array of messages to only include messages that do not contain any inappropriate words
+  return filterMessages(messages, message => listInappropriateWords(message).length === 0);
+}
+
+function filterMessagesByCategory(messages, category) {
+  // Filter an array of messages to only include messages with the specified category
+  return filterMessages(messages, message => message.category === category);
+}
+
+function filterMessagesByCategories(messages, categories) {
+  // Filter an array of messages to only include messages with any of the specified categories
+  return filterMessages(messages, message => categories.includes(message.category));
+}
+
+function dependsOn(dependencies, callback) {
+  // Return a function that calls the callback function if all of the dependencies are met
+  return (message) => {
+    if (dependencies.every(dependency => dependency(message))) {
+      callback(message);
+    }
+  };
+}
+
+// Export the functions and classes
 module.exports = {
   MessageFilter: MessageFilter,
   CensorFilter: CensorFilter,
@@ -265,5 +298,10 @@ module.exports = {
   listInappropriateWords: listInappropriateWords,
   categorizeMessagesBySentiment: categorizeMessagesBySentiment,
   categorizeMessagesByKeyword: categorizeMessagesByKeyword,
-  categorizeMessagesByInappropriateWords: categorizeMessagesByInappropriateWords
+  categorizeMessagesByInappropriateWords: categorizeMessagesByInappropriateWords,
+  filterMessagesBySentiment: filterMessagesBySentiment,
+  filterMessagesByInappropriateWords: filterMessagesByInappropriateWords,
+  filterMessagesByCategory: filterMessagesByCategory,
+  filterMessagesByCategories: filterMessagesByCategories,
+  dependsOn: dependsOn
 };
