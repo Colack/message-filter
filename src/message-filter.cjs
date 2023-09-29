@@ -1,5 +1,12 @@
+#!/usr/bin/env node
+
+// src/message-filter.cjs
+// Author: Jack Spencer :D
+
+// Import Libraries
 const natural = require('natural');
 const sentiment = require('sentiment');
+const washyourmouthoutwithsoap = require('washyourmouthoutwithsoap');
 
 /**
  * A class for filtering messages based on keywords and sentiment
@@ -107,6 +114,55 @@ class MessageFilter {
   }
 }
 
+/**
+ * A class for filtering messages based on keywords and sentiment
+ * @class CensorFilter
+ * @extends MessageFilter
+ * @param {Object} options - Options for the message filter
+ * @param {string[]} options.keywords - List of keywords to filter on
+ * @param {number} options.minSentiment - Minimum sentiment score for a message to be accepted
+ * @param {number} options.maxSentiment - Maximum sentiment score for a message to be accepted
+ * @param {Function} options.onAccept - Function to call when a message is accepted
+ * @param {Function} options.onReject - Function to call when a message is rejected
+ * @example
+ * const censorFilter = new CensorFilter({
+ * keywords: ['hello', 'world'],
+ * minSentiment: 0,
+ * maxSentiment: 10,
+ * onAccept: (message) => {
+ * console.log('Accepted message:', message);
+ * },
+ * onReject: (message) => {
+ * console.log('Rejected message:', message);
+ * }
+ * });
+ * @example
+ * const censorFilter = new CensorFilter();
+ * censorFilter.setKeywords(['hello', 'world']);
+ * censorFilter.setSentimentRange(0, 10);
+ * censorFilter.setCallbacks(
+ * (message) => {
+ * console.log('Accepted message:', message);
+ * },
+ * (message) => {
+ * console.log('Rejected message:', message);
+ * }
+ * );
+ * censorFilter.addFilter('censor', (message, word) => {
+ * const newContent = message.content.replace(word, '*'.repeat(word.length));
+ * return Object.assign({}, message, { content: newContent });
+ * });
+ */
+class CensorFilter extends MessageFilter {
+  constructor(options) {
+    super(options);
+    this.addFilter('censor', (message, word) => {
+      const newContent = message.content.replace(word, '*'.repeat(word.length));
+      return Object.assign({}, message, { content: newContent });
+    });
+  }
+}
+
 function hasKeyword(message, keywords) {
   // Check if the message content contains any of the keywords
   return keywords.some(keyword => message.content.toLowerCase().includes(keyword.toLowerCase()));
@@ -150,12 +206,64 @@ function filterMessagesByKeyword(messages, keywords) {
   return filterMessages(messages, message => hasKeyword(message, keywords));
 }
 
+function censorInappropriateWords(message) {
+  // Replace inappropriate words with asterisks
+  return replaceKeywords(message, washyourmouthoutwithsoap.list, '*');
+}
+
+function listInappropriateWords(message) {
+  // List the inappropriate words in the message content
+  return washyourmouthoutwithsoap.list.filter(word => message.content.includes(word));
+}
+
+function categorizeMessagesBySentiment(messages) {
+  // Categorize messages by sentiment score
+  return categorizeMessages(messages, message => {
+    const sentimentScore = getSentiment(message);
+    if (sentimentScore < 0) {
+      return 'negative';
+    } else if (sentimentScore > 0) {
+      return 'positive';
+    } else {
+      return 'neutral';
+    }
+  });
+}
+
+function categorizeMessagesByKeyword(messages, keywords) {
+  // Categorize messages by whether they contain any of the keywords
+  return categorizeMessages(messages, message => {
+    if (hasKeyword(message, keywords)) {
+      return 'contains keyword';
+    } else {
+      return 'does not contain keyword';
+    }
+  });
+}
+
+function categorizeMessagesByInappropriateWords(messages) {
+  // Categorize messages by whether they contain any inappropriate words
+  return categorizeMessages(messages, message => {
+    if (listInappropriateWords(message).length > 0) {
+      return 'contains inappropriate words';
+    } else {
+      return 'does not contain inappropriate words';
+    }
+  });
+}
+
 module.exports = {
   MessageFilter: MessageFilter,
+  CensorFilter: CensorFilter,
   hasKeyword: hasKeyword,
   getSentiment: getSentiment,
   filterMessages: filterMessages,
   replaceKeywords: replaceKeywords,
   categorizeMessages: categorizeMessages,
-  filterMessagesByKeyword: filterMessagesByKeyword
+  filterMessagesByKeyword: filterMessagesByKeyword,
+  censorInappropriateWords: censorInappropriateWords,
+  listInappropriateWords: listInappropriateWords,
+  categorizeMessagesBySentiment: categorizeMessagesBySentiment,
+  categorizeMessagesByKeyword: categorizeMessagesByKeyword,
+  categorizeMessagesByInappropriateWords: categorizeMessagesByInappropriateWords
 };
