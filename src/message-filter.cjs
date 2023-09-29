@@ -145,9 +145,10 @@ function categorizeMessages(messages, categoryFunction) {
   return categories;
 }
 
-// Create an API for the module
-
-
+function filterMessagesByKeyword(messages, keywords) {
+  // Filter an array of messages to only include messages that contain any of the keywords
+  return filterMessages(messages, message => hasKeyword(message, keywords));
+}
 
 module.exports = {
   MessageFilter: MessageFilter,
@@ -155,5 +156,6 @@ module.exports = {
   getSentiment: getSentiment,
   filterMessages: filterMessages,
   replaceKeywords: replaceKeywords,
-  categorizeMessages: categorizeMessages
+  categorizeMessages: categorizeMessages,
+  filterMessagesByKeyword: filterMessagesByKeyword
 };
