@@ -1,6 +1,6 @@
 {
     "name": "message-filter",
-    "version": "1.0.21",
+    "version": "1.0.22",
     "description": "A library for filtering and categorizing incoming messages based on content, sentiment, or other criteria.",
     "main": "src/message-filter.cjs",
     "scripts": {
@@ -10,7 +10,13 @@
         "message",
         "filter",
         "sentiment",
-        "keyword"
+        "keyword",
+        "categorize",
+        "categorization",
+        "sort",
+        "sorter",
+        "filtering",
+        "categorizing"
     ],
     "author": "Colack",
     "license": "Ludwig",
