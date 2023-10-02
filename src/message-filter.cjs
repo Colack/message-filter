@@ -6,7 +6,35 @@
 // Import Libraries
 const natural = require('natural');
 const sentiment = require('sentiment');
-const washyourmouthoutwithsoap = require('washyourmouthoutwithsoap');
+
+// Export Classes
+module.exports.MessageFilter = MessageFilter;
+module.exports.CensorFilter = CensorFilter;
+
+// Export Functions
+module.exports.hasKeyword = hasKeyword;
+module.exports.getSentiment = getSentiment;
+module.exports.filterMessages = filterMessages;
+module.exports.replaceKeywords = replaceKeywords;
+module.exports.categorizeMessages = categorizeMessages;
+module.exports.filterMessagesByKeyword = filterMessagesByKeyword;
+module.exports.censorInappropriateWords = censorInappropriateWords;
+module.exports.listInappropriateWords = listInappropriateWords;
+module.exports.categorizeMessagesBySentiment = categorizeMessagesBySentiment;
+module.exports.categorizeMessagesByKeyword = categorizeMessagesByKeyword;
+module.exports.categorizeMessagesByInappropriateWords = categorizeMessagesByInappropriateWords;
+module.exports.filterMessagesBySentiment = filterMessagesBySentiment;
+module.exports.filterMessagesByInappropriateWords = filterMessagesByInappropriateWords;
+module.exports.filterMessagesByCategory = filterMessagesByCategory;
+module.exports.filterMessagesByCategories = filterMessagesByCategories;
+module.exports.dependsOn = dependsOn;
+module.exports.isKeyword = isKeyword;
+module.exports.isCategory = isCategory;
+module.exports.isSentiment = isSentiment;
+module.exports.isMessage = isMessage;
+module.exports.isMessageObject = isMessageObject;
+module.exports.isMessageArray = isMessageArray;
+module.exports.isMessageString = isMessageString;
 
 /**
  * A class for filtering messages based on keywords and sentiment
@@ -206,14 +234,14 @@ function filterMessagesByKeyword(messages, keywords) {
   return filterMessages(messages, message => hasKeyword(message, keywords));
 }
 
-function censorInappropriateWords(message) {
+function censorInappropriateWords(message, keywords) {
   // Replace inappropriate words with asterisks
-  return replaceKeywords(message, washyourmouthoutwithsoap.list, '*');
+  return replaceKeywords(message, keywords, '*');
 }
 
-function listInappropriateWords(message) {
+function listInappropriateWords(message, keywords) {
   // List the inappropriate words in the message content
-  return washyourmouthoutwithsoap.list.filter(word => message.content.includes(word));
+  return keywords.filter(keyword => message.content.includes(keyword));
 }
 
 function categorizeMessagesBySentiment(messages) {
@@ -284,24 +312,40 @@ function dependsOn(dependencies, callback) {
   };
 }
 
-// Export the functions and classes
-module.exports = {
-  MessageFilter: MessageFilter,
-  CensorFilter: CensorFilter,
-  hasKeyword: hasKeyword,
-  getSentiment: getSentiment,
-  filterMessages: filterMessages,
-  replaceKeywords: replaceKeywords,
-  categorizeMessages: categorizeMessages,
-  filterMessagesByKeyword: filterMessagesByKeyword,
-  censorInappropriateWords: censorInappropriateWords,
-  listInappropriateWords: listInappropriateWords,
-  categorizeMessagesBySentiment: categorizeMessagesBySentiment,
-  categorizeMessagesByKeyword: categorizeMessagesByKeyword,
-  categorizeMessagesByInappropriateWords: categorizeMessagesByInappropriateWords,
-  filterMessagesBySentiment: filterMessagesBySentiment,
-  filterMessagesByInappropriateWords: filterMessagesByInappropriateWords,
-  filterMessagesByCategory: filterMessagesByCategory,
-  filterMessagesByCategories: filterMessagesByCategories,
-  dependsOn: dependsOn
-};
+function isKeyword(keyword) {
+  // Return a function that checks if a message contains the specified keyword
+  return (message) => hasKeyword(message, [keyword]);
+}
+
+function isCategory(category) {
+  // Return a function that checks if a message has the specified category
+  return (message) => message.category === category;
+}
+
+function isSentiment(minSentiment, maxSentiment) {
+  // Return a function that checks if a message has a sentiment score within the specified range
+  return (message) => {
+    const sentimentScore = getSentiment(message);
+    return sentimentScore >= minSentiment && sentimentScore <= maxSentiment;
+  };
+}
+
+function isMessage(message) {
+  // Return a function that checks if a message is the specified message
+  return (otherMessage) => message === otherMessage;
+}
+
+function isMessageObject(message) {
+  // Return a function that checks if a message has the same content as the specified message
+  return (otherMessage) => message.content === otherMessage.content;
+}
+
+function isMessageArray(messages) {
+  // Return a function that checks if a message is in the specified array of messages
+  return (message) => messages.some(otherMessage => message === otherMessage);
+}
+
+function isMessageString(message) {
+  // Return a function that checks if a message has the same content as the specified string
+  return (otherMessage) => message.content === otherMessage;
+}

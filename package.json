@@ -1,28 +1,35 @@
 {
-    "name": "message-filter",
-    "version": "1.0.23",
-    "description": "A library for filtering and categorizing incoming messages based on content, sentiment, or other criteria.",
-    "main": "src/message-filter.cjs",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "keywords": [
-        "message",
-        "filter",
-        "sentiment",
-        "keyword",
-        "categorize",
-        "categorization",
-        "sort",
-        "sorter",
-        "filtering",
-        "categorizing"
-    ],
-    "author": "Colack",
-    "license": "Ludwig",
-    "dependencies": {
-        "natural": "^6.7.2",
-        "sentiment": "^5.0.2",
-        "washyourmouthoutwithsoap": "^1.0.2"
-    }
+  "name": "message-filter",
+  "version": "1.0.3",
+  "description": "A library for filtering and categorizing incoming messages based on content, sentiment, or other criteria.",
+  "main": "src/message-filter.cjs",
+  "scripts": {
+    "test": "node src/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/colack/message-filter.git"
+  },
+  "keywords": [
+    "message",
+    "filter",
+    "keyword",
+    "sentiment",
+    "categorize",
+    "catergorization",
+    "sort",
+    "sorter",
+    "filtering",
+    "categorizing"
+  ],
+  "author": "Colack",
+  "license": "Ludwig",
+  "bugs": {
+    "url": "https://github.com/colack/message-filter/issues"
+  },
+  "homepage": "https://github.com/colack/message-filter#readme",
+  "dependencies": {
+    "natural": "^6.7.2",
+    "sentiment": "^5.0.2"
+  }
 }
