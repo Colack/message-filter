@@ -1,10 +1,12 @@
 {
   "name": "message-filter",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "A library for filtering and categorizing incoming messages based on content, sentiment, or other criteria.",
-  "main": "src/message-filter.cjs",
+  "main": "src/index.js",
+  "type": "module",
   "scripts": {
-    "test": "node src/test.js"
+    "test": "jest",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -13,14 +15,8 @@
   "keywords": [
     "message",
     "filter",
-    "keyword",
     "sentiment",
-    "categorize",
-    "catergorization",
-    "sort",
-    "sorter",
-    "filtering",
-    "categorizing"
+    "keywords"
   ],
   "author": "Colack",
   "license": "Ludwig",
@@ -31,5 +27,11 @@
   "dependencies": {
     "natural": "^6.7.2",
     "sentiment": "^5.0.2"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.24.8",
+    "babel-jest": "^29.7.0",
+    "eslint": "^7.32.0",
+    "jest": "^27.5.1"
   }
 }
